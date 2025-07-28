@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ir para Campo</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f3f4f6;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 0.5rem;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        input[type="number"],
+        button {
+            padding: 0.5rem;
+            font-size: 16px;
+            margin-top: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-left: 0.5rem;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 1rem;
+            display: block;
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>🔎 Navegar para Campo Específico</h2>
+        <p>Cole abaixo a linha de dados separada por <code>|</code>:</p>
+
+        <label for="linha">Linha completa:</label>
+        <textarea id="linha" placeholder="Cole sua linha aqui..."></textarea>
+
+        <label for="campo">Número do campo que deseja ir:</label>
+        <div class="flex">
+            <input type="number" id="campo" min="1" placeholder="Ex: 130">
+            <button onclick="irParaCampo()">Ir para campo</button>
+        </div>
+    </div>
+
+    <script>
+        function irParaCampo() {
+            const campoNumero = parseInt(document.getElementById("campo").value, 10);
+            const textarea = document.getElementById("linha");
+            const texto = textarea.value;
+            const campos = texto.split("|");
+
+            if (!campoNumero || campoNumero < 1 || campoNumero > campos.length) {
+                alert("⚠️ Campo inválido! A linha atual tem " + campos.length + " campos.");
+                return;
+            }
+
+            // Calcula a posição no texto
+            let pos = 0;
+            for (let i = 0; i < campoNumero - 1; i++) {
+                pos += campos[i].length + 1; // +1 por conta do pipe "|"
+            }
+
+            // Foca e move o cursor
+            textarea.focus();
+            textarea.setSelectionRange(pos, pos);
+        }
+
+        // Permitir ENTER para acionar a função
+        document.getElementById("campo").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault(); // Evita submit/reload
+                irParaCampo();
+            }
+        });
+    </script>
+</body>
+
+</html>
